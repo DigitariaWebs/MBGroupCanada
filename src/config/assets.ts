@@ -11,6 +11,8 @@ export const assets = {
     about: '/images/about.svg',
     service: '/images/service.png',
     hero: '/images/hero.png',
+    aboutv:
+      'https://videos.pexels.com/video-files/4500044/4500044-uhd_1440_2560_30fps.mp4',
     placeholder: '/images/placeholder.jpg',
     avatar: '/images/avatar.jpg',
   },

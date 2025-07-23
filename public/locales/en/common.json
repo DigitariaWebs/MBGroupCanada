@@ -99,6 +99,11 @@
       "quickResponse": "Response within 24 hours",
       "experience": "25 years of experience in Quebec",
       "fixedPrice": "Guaranteed fixed price"
+    },
+    "banner": {
+      "message": "Discover your ideal property with MB-Canada",
+      "learnMore": "Learn More",
+      "close": "Close banner"
     }
   }
 }

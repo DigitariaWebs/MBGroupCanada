@@ -99,6 +99,11 @@
       "quickResponse": "Réponse sous 24 heures",
       "experience": "25 ans d'expérience au Québec",
       "fixedPrice": "Prix fixe garanti"
+    },
+    "banner": {
+      "message": "Partez à la découverte de votre bien idéal avec MB-Canada",
+      "learnMore": "En savoir plus",
+      "close": "Fermer la bannière"
     }
   }
 }

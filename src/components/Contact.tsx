@@ -159,12 +159,24 @@ const Contact: React.FC = () => {
                   aria-label={t('contact.form.projectType')}
                   className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200'
                 >
-                  <option value=''>{t('contact.form.projectTypeOptions.select')}</option>
-                  <option value='residential'>{t('contact.form.projectTypeOptions.residential')}</option>
-                  <option value='commercial'>{t('contact.form.projectTypeOptions.commercial')}</option>
-                  <option value='mixed'>{t('contact.form.projectTypeOptions.mixed')}</option>
-                  <option value='renovation'>{t('contact.form.projectTypeOptions.renovation')}</option>
-                  <option value='other'>{t('contact.form.projectTypeOptions.other')}</option>
+                  <option value=''>
+                    {t('contact.form.projectTypeOptions.select')}
+                  </option>
+                  <option value='residential'>
+                    {t('contact.form.projectTypeOptions.residential')}
+                  </option>
+                  <option value='commercial'>
+                    {t('contact.form.projectTypeOptions.commercial')}
+                  </option>
+                  <option value='mixed'>
+                    {t('contact.form.projectTypeOptions.mixed')}
+                  </option>
+                  <option value='renovation'>
+                    {t('contact.form.projectTypeOptions.renovation')}
+                  </option>
+                  <option value='other'>
+                    {t('contact.form.projectTypeOptions.other')}
+                  </option>
                 </select>
               </div>
 
