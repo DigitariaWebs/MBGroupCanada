@@ -17,11 +17,11 @@ const TopBanner: React.FC = () => {
             {t('contact.banner.message')}
           </span>
           <button
-            className='bg-white text-black px-4 py-1 rounded text-sm font-medium hover:bg-gray-100 transition-colors duration-200'
+            className='bg-white text-black px-4 py-1 rounded text-sm font-medium hover:bg-gray-100 transition-colors duration-200 cursor-pointer'
             onClick={() => {
               // Vérification côté client pour éviter l'erreur SSR
               if (typeof window !== 'undefined') {
-                window.open('#', '_blank');
+                window.location.href = '/about';
               }
             }}
           >
@@ -32,7 +32,7 @@ const TopBanner: React.FC = () => {
         {/* Bouton de fermeture */}
         <button
           onClick={() => setIsVisible(false)}
-          className='absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors duration-200'
+          className='absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors duration-200 cursor-pointer'
           aria-label={t('contact.banner.close')}
         >
           <svg

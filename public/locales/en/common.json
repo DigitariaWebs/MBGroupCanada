@@ -105,5 +105,8 @@
       "learnMore": "Learn More",
       "close": "Close banner"
     }
+  },
+  "projects": {
+    "viewAll": "View All Projects"
   }
 }

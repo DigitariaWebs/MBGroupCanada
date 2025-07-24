@@ -105,5 +105,8 @@
       "learnMore": "En savoir plus",
       "close": "Fermer la bannière"
     }
+  },
+  "projects": {
+    "viewAll": "Voir tous les projets"
   }
 }

@@ -177,8 +177,15 @@ const Projects: React.FC = () => {
           <p className='text-lg text-[#2d2e2e] mb-6'>
             Découvrez l'ensemble de notre portfolio et nos projets en cours
           </p>
-          <button className='bg-[#961d1f] text-white font-semibold px-8 py-3 rounded-lg hover:bg-[#7a1619] transition-colors duration-200'>
-            Voir tous nos projets
+          <button
+            className='bg-[#961d1f] text-white font-semibold px-8 py-3 rounded-lg hover:bg-[#7a1619] transition-colors duration-200 cursor-pointer'
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                window.location.href = '/projects';
+              }
+            }}
+          >
+            {t('projects.viewAll')}
           </button>
         </div>
       </div>

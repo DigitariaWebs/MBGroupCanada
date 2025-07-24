@@ -20,7 +20,11 @@ const Footer: React.FC = () => {
     { name: 'À propos', href: '/about' },
     { name: 'Services', href: '/services' },
     { name: 'Projets', href: '/projects' },
-    { name: 'Contact', href: '/contact' },
+    {
+      name: 'Contact',
+      href: '#contact',
+      className: 'text-[#961d1f] hover:text-[#7a1619] transition-colors duration-200',
+    },
   ];
 
   const services = [
@@ -145,7 +149,7 @@ const Footer: React.FC = () => {
 
             {/* CTA Button */}
             <div className='mt-6'>
-              <button className='bg-[#961d1f] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#7a1619] transition-colors duration-200 w-full'>
+              <button className='bg-[#961d1f] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#7a1619] transition-colors duration-200 w-full cursor-pointer'>
                 Obtenir un devis
               </button>
             </div>

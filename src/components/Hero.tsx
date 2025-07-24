@@ -55,8 +55,13 @@ const Hero: React.FC = () => {
               </div>
 
               <button
-                className='bg-[#1E1E1E] text-white font-medium text-base px-6 py-3 rounded-sm hover:bg-[#333333] transition-colors duration-200'
-                onClick={() => (window.location.href = '/contact')}
+                className='bg-[#1E1E1E] text-white font-medium text-base px-6 py-3 rounded-sm hover:bg-[#333333] transition-colors duration-200 cursor-pointer'
+                onClick={() => {
+                  const contactSection = document.getElementById('contact');
+                  if (contactSection) {
+                    contactSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
               >
                 Nous contactez
               </button>

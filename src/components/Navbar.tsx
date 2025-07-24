@@ -77,9 +77,9 @@ const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
       {/* Desktop Call Button and Language Switcher */}
       <div className='hidden md:flex items-center gap-3'>
         <button
-          className='bg-[#1E1E1E] text-white font-medium text-sm px-6 py-2.5 rounded-lg hover:bg-[#333333] transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md'
+          className='bg-[#1E1E1E] text-white font-medium text-sm px-6 py-2.5 rounded-lg hover:bg-[#333333] transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md cursor-pointer'
           data-name='Button'
-          onClick={() => (window.location.href = 'tel:+1234567890')}
+          onClick={() => (window.location.href = 'tel:+14505000088')}
         >
           {t('callUs', { ns: 'navigation' })}
         </button>
@@ -87,7 +87,7 @@ const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
         {/* Language Switcher */}
         <button
           onClick={handleLanguageChange}
-          className='relative text-[#2d2e2e] hover:text-[#961d1f] transition-all duration-200 font-medium px-4 py-2.5 rounded-lg hover:bg-gray-50 border border-gray-200 hover:border-[#961d1f] shadow-sm hover:shadow-md flex items-center gap-2 bg-white min-w-[70px] justify-center'
+          className='relative text-[#2d2e2e] hover:text-[#961d1f] transition-all duration-200 font-medium px-4 py-2.5 rounded-lg hover:bg-gray-50 border border-gray-200 hover:border-[#961d1f] shadow-sm hover:shadow-md flex items-center gap-2 bg-white min-w-[70px] justify-center cursor-pointer'
         >
           <span className='text-xs opacity-60'>🌐</span>
           <span className='text-sm font-semibold'>
@@ -98,7 +98,7 @@ const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
 
       {/* Mobile Menu Button */}
       <button
-        className='md:hidden flex flex-col justify-center items-center w-10 h-10 space-y-1 rounded-lg hover:bg-gray-100 transition-colors duration-300'
+        className='md:hidden flex flex-col justify-center items-center w-10 h-10 space-y-1 rounded-lg hover:bg-gray-100 transition-colors duration-300 cursor-pointer'
         onClick={toggleMobileMenu}
         aria-label='Toggle mobile menu'
       >
@@ -181,7 +181,7 @@ const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
               className='w-full bg-[#1E1E1E] text-white font-medium text-sm px-6 py-3 rounded-lg hover:bg-[#333333] transition-all duration-200 shadow-sm hover:shadow-md'
               onClick={() => {
                 closeMobileMenu();
-                window.location.href = 'tel:+1234567890';
+                window.location.href = 'tel:+14505000088';
               }}
             >
               {t('callUs', { ns: 'navigation' })}
