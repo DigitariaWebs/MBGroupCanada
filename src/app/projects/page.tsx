@@ -23,6 +23,12 @@ const ProjectsPage: React.FC = () => {
     phone: '',
     details: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
+  const [consent, setConsent] = useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -34,10 +40,93 @@ const ProjectsPage: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      // Check file size (10MB limit)
+      if (file.size > 10 * 1024 * 1024) {
+        setSubmitStatus({
+          type: 'error',
+          message: 'Le fichier ne doit pas dépasser 10MB',
+        });
+        return;
+      }
+      setSelectedFile(file);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Ici vous pouvez ajouter la logique d'envoi du formulaire
+    
+    // Check if all fields are filled
+    if (!formData.request || !formData.name || !formData.email || !formData.phone || !formData.details) {
+      setSubmitStatus({
+        type: 'error',
+        message: 'Veuillez remplir tous les champs obligatoires',
+      });
+      return;
+    }
+
+    // Check if consent is given
+    if (!consent) {
+      setSubmitStatus({
+        type: 'error',
+        message: 'Veuillez accepter les conditions',
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: '' });
+
+    try {
+      // Create FormData object
+      const formDataToSend = new FormData();
+      formDataToSend.append('request', formData.request);
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('phone', formData.phone);
+      formDataToSend.append('details', formData.details);
+      
+      if (selectedFile) {
+        formDataToSend.append('file', selectedFile);
+      }
+
+      const response = await fetch('/api/contactProject', {
+        method: 'POST',
+        body: formDataToSend,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Une erreur est survenue');
+      }
+
+      setSubmitStatus({
+        type: 'success',
+        message: 'Votre message a été envoyé avec succès',
+      });
+      
+      // Clear form
+      setFormData({
+        request: '',
+        name: '',
+        email: '',
+        phone: '',
+        details: '',
+      });
+      setConsent(false);
+    } catch (error) {
+      setSubmitStatus({
+        type: 'error',
+        message: error instanceof Error ? error.message : 'Une erreur est survenue',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -122,7 +211,7 @@ const ProjectsPage: React.FC = () => {
               un havre de paix au cœur de Laval. L&apos;édifice présente une
               conception contemporaine unique...
             </p>
-            <button className='bg-[#222222] text-white px-8 py-4 rounded'>
+            <button className='bg-[#222222] text-white px-8 py-4 rounded cursor-pointer'>
               Voir Détails
             </button>
           </div>
@@ -149,7 +238,7 @@ const ProjectsPage: React.FC = () => {
               from remodeling and new home construction to home studios and shed
               structures. We are passionate about helping homeowners create the
             </p>
-            <button className='bg-[#222222] text-white px-8 py-4 rounded'>
+            <button className='bg-[#222222] text-white px-8 py-4 rounded cursor-pointer'>
               Voir Détails
             </button>
           </div>
@@ -176,7 +265,7 @@ const ProjectsPage: React.FC = () => {
               from remodeling and new home construction to home studios and shed
               structures. We are passionate about helping homeowners create the
             </p>
-            <button className='bg-[#222222] text-white px-8 py-4 rounded'>
+            <button className='bg-[#222222] text-white px-8 py-4 rounded cursor-pointer'>
               Voir Détails
             </button>
           </div>
@@ -209,6 +298,7 @@ const ProjectsPage: React.FC = () => {
                     placeholder='Demande'
                     value={formData.request}
                     onChange={handleInputChange}
+                    required
                     className='flex-1 py-3 border-b border-[#737b7d] bg-transparent text-[#383c3e] placeholder-[#383c3e] focus:outline-none focus:border-[#e22d2e]'
                   />
                 </div>
@@ -224,6 +314,7 @@ const ProjectsPage: React.FC = () => {
                     placeholder='Nom & prénom'
                     value={formData.name}
                     onChange={handleInputChange}
+                    required
                     className='flex-1 py-3 border-b border-[#737b7d] bg-transparent text-[#383c3e] placeholder-[#8e8e8e] focus:outline-none focus:border-[#e22d2e]'
                   />
                 </div>
@@ -239,6 +330,7 @@ const ProjectsPage: React.FC = () => {
                     placeholder='Courriel'
                     value={formData.email}
                     onChange={handleInputChange}
+                    required
                     className='flex-1 py-3 border-b border-[#737b7d] bg-transparent text-[#383c3e] placeholder-[#8e8e8e] focus:outline-none focus:border-[#e22d2e]'
                   />
                 </div>
@@ -250,6 +342,7 @@ const ProjectsPage: React.FC = () => {
                     placeholder='Téléphone'
                     value={formData.phone}
                     onChange={handleInputChange}
+                    required
                     className='flex-1 py-3 border-b border-[#737b7d] bg-transparent text-[#383c3e] placeholder-[#8e8e8e] focus:outline-none focus:border-[#e22d2e]'
                   />
                 </div>
@@ -265,22 +358,33 @@ const ProjectsPage: React.FC = () => {
                     placeholder='Précisions'
                     value={formData.details}
                     onChange={handleInputChange}
+                    required
                     className='flex-1 py-3 border-b border-[#737b7d] bg-transparent text-[#383c3e] placeholder-[#8e8e8e] focus:outline-none focus:border-[#e22d2e]'
                   />
                 </div>
               </div>
 
               {/* File Upload */}
-              <div className='border-2 border-dashed border-[#8e8e8e] rounded p-8 text-center'>
+              <div 
+                className='border-2 border-dashed border-[#8e8e8e] rounded p-8 text-center cursor-pointer hover:border-[#e22d2e] transition-colors'
+                onClick={() => document.getElementById('file-upload')?.click()}
+              >
                 <div className='flex flex-col items-center space-y-2'>
                   <Upload size={24} className='text-[#8e8e8e]' />
                   <span className='text-[#8e8e8e] text-sm'>
-                    Télécharger un fichier
+                    {selectedFile ? selectedFile.name : 'Télécharger un fichier'}
                   </span>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
+                  />
                 </div>
               </div>
               <p className='text-[#8e8e8e] text-xs'>
-                Attach file. File size of your documents should not exceed 10MB
+                Formats acceptés: PDF, DOC, DOCX, TXT, JPG, PNG. Taille maximale: 10MB
               </p>
 
               {/* Checkbox */}
@@ -288,7 +392,10 @@ const ProjectsPage: React.FC = () => {
                 <input
                   type='checkbox'
                   id='consent'
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
                   className='mt-1 w-4 h-4 border border-[#383c3e] rounded-sm'
+                  required
                 />
                 <label htmlFor='consent' className='text-[#383c3e] text-sm'>
                   En soumettant ce formulaire, j&apos;accepte que les
@@ -297,12 +404,26 @@ const ProjectsPage: React.FC = () => {
                 </label>
               </div>
 
+              {/* Status Message */}
+              {submitStatus.type && (
+                <div
+                  className={`p-4 rounded-md ${
+                    submitStatus.type === 'success'
+                      ? 'bg-green-50 text-green-800'
+                      : 'bg-red-50 text-red-800'
+                  }`}
+                >
+                  {submitStatus.message}
+                </div>
+              )}
+
               {/* Submit Button */}
               <button
                 type='submit'
-                className='w-full bg-[#e22d2e] text-white py-4 rounded font-bold text-sm uppercase tracking-wider hover:bg-[#d41d1f] transition-colors'
+                disabled={isSubmitting}
+                className='w-full bg-[#e22d2e] text-white py-4 rounded font-bold text-sm uppercase tracking-wider hover:bg-[#d41d1f] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer'
               >
-                Envoyer
+                {isSubmitting ? 'Envoi en cours...' : 'Envoyer'}
               </button>
             </form>
           </div>

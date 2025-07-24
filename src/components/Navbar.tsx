@@ -67,7 +67,7 @@ const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
           {t('projects', { ns: 'navigation' })}
         </Link>
         <Link
-          href='/contact'
+          href='/#contact'
           className='hover:text-[#961d1f] transition-all duration-200 px-3 py-2 rounded-md hover:bg-gray-50'
         >
           {t('contact', { ns: 'navigation' })}
@@ -155,7 +155,7 @@ const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
             {t('projects', { ns: 'navigation' })}
           </Link>
           <Link
-            href='/contact'
+            href='/#contact'
             className='px-6 py-4 text-[#2d2e2e] font-medium hover:bg-gray-50 hover:text-[#961d1f] transition-all duration-200 border-l-3 border-transparent hover:border-[#961d1f]'
             onClick={closeMobileMenu}
           >

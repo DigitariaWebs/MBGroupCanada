@@ -310,7 +310,7 @@ const AboutPage: React.FC = () => {
                     {project.description}
                   </p>
                   <div className='mt-4'>
-                    <span className='inline-block px-3 py-1 text-xs text-gray-300 border border-gray-200 rounded'>
+                    <span className='inline-block px-3 py-1 text-xs text-[#e22d2e] border border-[#e22d2e] rounded'>
                       {project.category}
                     </span>
                   </div>
