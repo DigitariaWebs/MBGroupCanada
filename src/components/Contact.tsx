@@ -99,7 +99,7 @@ const Contact: React.FC = () => {
                     value={formData.name}
                     onChange={handleInputChange}
                     required
-                    className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200'
+                    className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 placeholder-gray-500'
                     placeholder={t('contact.form.namePlaceholder')}
                   />
                 </div>
@@ -113,7 +113,7 @@ const Contact: React.FC = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200'
+                    className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 placeholder-gray-500'
                     placeholder={t('contact.form.emailPlaceholder')}
                   />
                 </div>
@@ -129,7 +129,7 @@ const Contact: React.FC = () => {
                     name='phone'
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200'
+                    className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 placeholder-gray-500'
                     placeholder={t('contact.form.phonePlaceholder')}
                   />
                 </div>
@@ -142,7 +142,7 @@ const Contact: React.FC = () => {
                     name='company'
                     value={formData.company}
                     onChange={handleInputChange}
-                    className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200'
+                    className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 placeholder-gray-500'
                     placeholder={t('contact.form.companyPlaceholder')}
                   />
                 </div>
@@ -157,9 +157,9 @@ const Contact: React.FC = () => {
                   value={formData.projectType}
                   onChange={handleInputChange}
                   aria-label={t('contact.form.projectType')}
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200'
+                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 text-gray-500'
                 >
-                  <option value=''>
+                  <option value='' disabled hidden>
                     {t('contact.form.projectTypeOptions.select')}
                   </option>
                   <option value='residential'>
@@ -190,7 +190,7 @@ const Contact: React.FC = () => {
                   onChange={handleInputChange}
                   required
                   rows={5}
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 resize-vertical'
+                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 resize-vertical placeholder-gray-500'
                   placeholder={t('contact.form.messagePlaceholder')}
                 />
               </div>
@@ -239,32 +239,32 @@ const Contact: React.FC = () => {
                 <p className='text-sm'>{t('contact.map.subtitle')}</p>
               </div>
             </div>
-
-            {/* Why Choose Us */}
-            <div className='bg-[#961d1f] text-white p-6 rounded-lg'>
-              <h3 className='text-xl font-bold mb-4'>
-                {t('contact.whyChooseUs.title')}
-              </h3>
-              <ul className='space-y-2 text-sm'>
-                <li className='flex items-start gap-2'>
-                  <HiOutlineCheck className='text-white mt-0.5 flex-shrink-0' />
-                  <span>{t('contact.whyChooseUs.freeConsultation')}</span>
-                </li>
-                <li className='flex items-start gap-2'>
-                  <HiOutlineCheck className='text-white mt-0.5 flex-shrink-0' />
-                  <span>{t('contact.whyChooseUs.quickResponse')}</span>
-                </li>
-                <li className='flex items-start gap-2'>
-                  <HiOutlineCheck className='text-white mt-0.5 flex-shrink-0' />
-                  <span>{t('contact.whyChooseUs.experience')}</span>
-                </li>
-                <li className='flex items-start gap-2'>
-                  <HiOutlineCheck className='text-white mt-0.5 flex-shrink-0' />
-                  <span>{t('contact.whyChooseUs.fixedPrice')}</span>
-                </li>
-              </ul>
-            </div>
           </div>
+        </div>
+
+        {/* Why Choose Us */}
+        <div className='bg-[#961d1f] text-white p-6 rounded-lg mb-12 text-center'>
+          <h3 className='text-xl font-bold mb-4'>
+            {t('contact.whyChooseUs.title')}
+          </h3>
+          <ul className='space-y-2 text-sm'>
+            <li className='flex items-center justify-center gap-2'>
+              <HiOutlineCheck className='text-white mt-0.5 flex-shrink-0' />
+              <span>{t('contact.whyChooseUs.freeConsultation')}</span>
+            </li>
+            <li className='flex items-center justify-center gap-2'>
+              <HiOutlineCheck className='text-white mt-0.5 flex-shrink-0' />
+              <span>{t('contact.whyChooseUs.quickResponse')}</span>
+            </li>
+            <li className='flex items-center justify-center gap-2'>
+              <HiOutlineCheck className='text-white mt-0.5 flex-shrink-0' />
+              <span>{t('contact.whyChooseUs.experience')}</span>
+            </li>
+            <li className='flex items-center justify-center gap-2'>
+              <HiOutlineCheck className='text-white mt-0.5 flex-shrink-0' />
+              <span>{t('contact.whyChooseUs.fixedPrice')}</span>
+            </li>
+          </ul>
         </div>
       </div>
     </section>

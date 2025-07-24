@@ -167,11 +167,6 @@ const Projects: React.FC = () => {
                     </span>
                   ))}
                 </div>
-
-                <button className='text-[#961d1f] font-semibold hover:text-[#7a1619] transition-colors duration-200 flex items-center gap-2'>
-                  Voir le projet
-                  <HiOutlineArrowRight className='transform group-hover:translate-x-1 transition-transform duration-200' />
-                </button>
               </div>
             </div>
           ))}

@@ -102,6 +102,8 @@ const Testimonials: React.FC = () => {
 
   // Calculate visible testimonials (show 3 at a time on desktop, 1 on mobile)
   const getVisibleTestimonials = () => {
+    if (typeof window === 'undefined') return testimonials.slice(0, 3);
+
     const visibleCount =
       window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1;
     const visible = [];
@@ -122,8 +124,11 @@ const Testimonials: React.FC = () => {
     };
 
     updateVisible();
-    window.addEventListener('resize', updateVisible);
-    return () => window.removeEventListener('resize', updateVisible);
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', updateVisible);
+      return () => window.removeEventListener('resize', updateVisible);
+    }
   }, [currentIndex]);
 
   return (
@@ -145,7 +150,11 @@ const Testimonials: React.FC = () => {
           <div
             className='flex transition-transform duration-1000 ease-in-out gap-8'
             style={{
-              transform: `translateX(-${(currentIndex * 100) / (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1)}%)`,
+              transform: `translateX(-${
+                typeof window !== 'undefined'
+                  ? (currentIndex * 100) / (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1)
+                  : 0
+              }%)`,
             }}
           >
             {testimonials.map(testimonial => (
