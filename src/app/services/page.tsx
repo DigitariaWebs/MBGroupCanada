@@ -1,13 +1,26 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TopBanner from '@/components/TopBanner';
+import EntrepreneursModal from '@/components/models/EntrepreneursModal';
+import ContratCoutFixeModal from '@/components/models/ContratCoutFixeModal';
+import GestionProjetModal from '@/components/models/GestionProjetModal';
+import GestionnaireContratModal from '@/components/models/GestionnaireContratModal';
+import ProjetsCleEnMainModal from '@/components/models/ProjetsCleEnMainModal';
+import LogementAbordableModal from '@/components/models/LogementAbordableModal';
 import { assets } from '@/config/assets';
 
 const ServicesPage: React.FC = () => {
+  const [isEntrepreneursModalOpen, setIsEntrepreneursModalOpen] = useState(false);
+  const [isGestionContratModalOpen, setIsGestionContratModalOpen] = useState(false);
+  const [isGestionProjetModalOpen, setIsGestionProjetModalOpen] = useState(false);
+  const [isGestionnaireContratModalOpen, setIsGestionnaireContratModalOpen] = useState(false);
+  const [isContratCoutFixeModalOpen, setIsContratCoutFixeModalOpen] = useState(false);
+  const [isProjetsCleEnMainModalOpen, setIsProjetsCleEnMainModalOpen] = useState(false);
+  const [isLogementAbordableModalOpen, setIsLogementAbordableModalOpen] = useState(false);
   return (
     <div className='bg-white min-h-screen'>
       <TopBanner />
@@ -44,9 +57,12 @@ const ServicesPage: React.FC = () => {
 
         {/* Services Slider Section */}
         <div className='py-16'>
-          <div className='grid grid-cols-5 gap-8 items-center'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 items-stretch max-w-6xl mx-auto'>
             {/* Service 1 - Gestion de Contrat */}
-            <div className='relative p-6 h-[353px] flex flex-col justify-end overflow-hidden'>
+            <button
+              onClick={() => setIsGestionnaireContratModalOpen(true)}
+              className='relative p-6 h-[353px] flex flex-col justify-end overflow-hidden cursor-pointer hover:scale-105 hover:shadow-lg transition-transform rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+            >
               <div className='absolute inset-0'>
                 <img
                   src={assets.images.contractManagement}
@@ -69,17 +85,22 @@ const ServicesPage: React.FC = () => {
                   Plus de détails
                 </p>
               </div>
-            </div>
+            </button>
 
-            {/* Service 2 - Gestion de Projets (Featured with image) */}
-            <div className='relative h-[353px] rounded-lg overflow-hidden'>
-              <img
-                src={assets.images.projectManagement}
-                alt='Gestion de Projets'
-                className='absolute inset-0 w-full h-full object-cover'
-              />
-              <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent'></div>
-              <div className='absolute bottom-0 left-0 right-0 p-6 text-white'>
+            {/* Service 2 - Gestion de Projets */}
+            <button
+              onClick={() => setIsGestionProjetModalOpen(true)}
+              className='relative p-6 h-[353px] flex flex-col justify-end overflow-hidden cursor-pointer hover:scale-105 hover:shadow-lg transition-transform rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+            >
+              <div className='absolute inset-0'>
+                <img
+                  src={assets.images.projectManagement}
+                  alt='Gestion de Projets'
+                  className='w-full h-full object-cover'
+                />
+                <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent'></div>
+              </div>
+              <div className='relative z-10 mb-2 text-white'>
                 <p className='text-white text-[11px] font-medium mb-4'>
                   Solutions clé
                 </p>
@@ -93,10 +114,13 @@ const ServicesPage: React.FC = () => {
                   Plus de détails
                 </p>
               </div>
-            </div>
+            </button>
 
             {/* Service 3 - Projets clé En main */}
-            <div className='relative p-6 h-[353px] flex flex-col justify-end overflow-hidden'>
+            <button
+              onClick={() => setIsProjetsCleEnMainModalOpen(true)}
+              className='relative p-6 h-[353px] flex flex-col justify-end overflow-hidden cursor-pointer hover:scale-105 hover:shadow-lg transition-transform rounded-lg'
+            >
               <div className='absolute inset-0'>
                 <img
                   src={assets.images.turnkeyProjects}
@@ -119,10 +143,13 @@ const ServicesPage: React.FC = () => {
                   Plus de détails
                 </p>
               </div>
-            </div>
+            </button>
 
             {/* Service 4 - Logement Abordable */}
-            <div className='relative p-6 h-[353px] flex flex-col justify-end overflow-hidden'>
+            <button
+              onClick={() => setIsLogementAbordableModalOpen(true)}
+              className='relative p-6 h-[353px] flex flex-col justify-end overflow-hidden cursor-pointer hover:scale-105 hover:shadow-lg transition-transform rounded-lg'
+            >
               <div className='absolute inset-0'>
                 <img
                   src={assets.images.affordableHousing}
@@ -145,10 +172,13 @@ const ServicesPage: React.FC = () => {
                   Plus de détails
                 </p>
               </div>
-            </div>
+            </button>
 
             {/* Service 5 - Contrat cout Fixe */}
-            <div className='relative p-6 h-[353px] flex flex-col justify-end overflow-hidden'>
+            <button
+              onClick={() => setIsContratCoutFixeModalOpen(true)}
+              className='relative p-6 h-[353px] flex flex-col justify-end overflow-hidden cursor-pointer hover:scale-105 hover:shadow-lg transition-transform rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+            >
               <div className='absolute inset-0'>
                 <img
                   src={assets.images.fixedCostContract}
@@ -167,11 +197,40 @@ const ServicesPage: React.FC = () => {
                   Fixe
                 </h3>
                 <div className='border-b border-white mb-4'></div>
-                <p className='text-white text-[11px] font-medium tracking-[-0.22px]'>
+                <p className='text-white text-[11px] font-medium'>
                   Plus de détails
                 </p>
               </div>
-            </div>
+            </button>
+
+            {/* Service 6 - Entrepreneurs et Promoteurs */}
+            <button
+              onClick={() => setIsEntrepreneursModalOpen(true)}
+              className='relative p-6 h-[353px] flex flex-col justify-end overflow-hidden cursor-pointer hover:scale-105 hover:shadow-lg transition-transform rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+            >
+              <div className='absolute inset-0'>
+                <img
+                  src={assets.images.EntrepreneursetPromoteurs}
+                  alt='Entrepreneurset promoteurs'
+                  className='w-full h-full object-cover'
+                />
+                <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent'></div>
+              </div>
+              <div className='relative z-10 mb-2 text-white'>
+                <p className='text-white text-[11px] font-medium mb-4'>
+                  Nouveaux horizons
+                </p>
+                <h3 className='text-white text-[24px] font-extrabold leading-tight tracking-[0.48px] mb-4'>
+                  Entrepreneurs et
+                  <br />
+                  Promoteurs
+                </h3>
+                <div className='border-b border-white mb-4'></div>
+                <p className='text-white text-[11px] font-medium'>
+                  Plus de détails
+                </p>
+              </div>
+            </button>
           </div>
         </div>
 
@@ -336,6 +395,42 @@ const ServicesPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Add the Entrepreneurs Modal */}
+      <EntrepreneursModal 
+        isOpen={isEntrepreneursModalOpen}
+        onClose={() => setIsEntrepreneursModalOpen(false)}
+      />
+
+      {/* Add the Gestion Contrat Modal */}
+      <ContratCoutFixeModal 
+        isOpen={isContratCoutFixeModalOpen}
+        onClose={() => setIsContratCoutFixeModalOpen(false)}
+      />
+
+      {/* Add the Gestion Projet Modal */}
+      <GestionProjetModal 
+        isOpen={isGestionProjetModalOpen}
+        onClose={() => setIsGestionProjetModalOpen(false)}
+      />
+
+      {/* Add the Gestionnaire Contrat Modal */}
+      <GestionnaireContratModal 
+        isOpen={isGestionnaireContratModalOpen}
+        onClose={() => setIsGestionnaireContratModalOpen(false)}
+      />
+
+      {/* Add the Projets Cle En Main Modal */}
+      <ProjetsCleEnMainModal
+        isOpen={isProjetsCleEnMainModalOpen}
+        onClose={() => setIsProjetsCleEnMainModalOpen(false)}
+      />
+
+      {/* Add the Logement Abordable Modal */}
+      <LogementAbordableModal
+        isOpen={isLogementAbordableModalOpen}
+        onClose={() => setIsLogementAbordableModalOpen(false)}
+      />
 
       <Footer />
     </div>
