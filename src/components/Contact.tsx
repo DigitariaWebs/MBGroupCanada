@@ -34,11 +34,56 @@ const Contact: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
-    // You would typically send this data to your backend
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: '' });
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus({
+          type: 'success',
+          message: 'Votre message a été envoyé avec succès! Nous vous contacterons bientôt.',
+        });
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          company: '',
+          projectType: '',
+          message: '',
+        });
+      } else {
+        setSubmitStatus({
+          type: 'error',
+          message: data.error || 'Une erreur est survenue lors de l\'envoi du message.',
+        });
+      }
+    } catch (error) {
+      setSubmitStatus({
+        type: 'error',
+        message: 'Une erreur est survenue. Veuillez réessayer plus tard.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -53,18 +98,22 @@ const Contact: React.FC = () => {
       value: t('contact.info.emailValue'),
       icon: HiOutlineEnvelope,
       href: `mailto:${t('contact.info.emailValue')}`,
+      target: '_blank',
+      rel: 'noopener noreferrer',
     },
     {
       title: t('contact.info.address'),
       value: t('contact.info.addressValue'),
       icon: HiOutlineMapPin,
-      href: '#',
+      href: 'https://www.google.com/maps?q=Montréal,+Québec,+Canada',
+      target: '_blank',
+      rel: 'noopener noreferrer',
     },
     {
       title: t('contact.info.hours'),
       value: t('contact.info.hoursValue'),
       icon: HiOutlineClock,
-      href: '#',
+      href: null, // Removed href for hours
     },
   ];
 
@@ -83,125 +132,171 @@ const Contact: React.FC = () => {
 
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-12'>
           {/* Contact Form */}
-          <div className='bg-gray-50 p-8 rounded-2xl'>
-            <h2 className='text-2xl font-bold text-[#2d2e2e] mb-6'>
-              {t('contact.form.title')}
-            </h2>
-            <form onSubmit={handleSubmit} className='space-y-6'>
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                <div>
-                  <label className='block text-sm font-medium text-[#2d2e2e] mb-2'>
-                    {t('contact.form.name')} *
-                  </label>
-                  <input
-                    type='text'
-                    name='name'
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 placeholder-gray-500'
-                    placeholder={t('contact.form.namePlaceholder')}
-                  />
+          <div className='bg-gray-50 p-8 rounded-2xl h-full flex flex-col'>
+            {submitStatus.type === 'success' ? (
+              <div className="text-center flex-1 flex flex-col items-center justify-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <HiOutlineCheck className="w-8 h-8 text-green-600" />
                 </div>
-                <div>
-                  <label className='block text-sm font-medium text-[#2d2e2e] mb-2'>
-                    {t('contact.form.email')} *
-                  </label>
-                  <input
-                    type='email'
-                    name='email'
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 placeholder-gray-500'
-                    placeholder={t('contact.form.emailPlaceholder')}
-                  />
-                </div>
-              </div>
-
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                <div>
-                  <label className='block text-sm font-medium text-[#2d2e2e] mb-2'>
-                    {t('contact.form.phone')}
-                  </label>
-                  <input
-                    type='tel'
-                    name='phone'
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 placeholder-gray-500'
-                    placeholder={t('contact.form.phonePlaceholder')}
-                  />
-                </div>
-                <div>
-                  <label className='block text-sm font-medium text-[#2d2e2e] mb-2'>
-                    {t('contact.form.company')}
-                  </label>
-                  <input
-                    type='text'
-                    name='company'
-                    value={formData.company}
-                    onChange={handleInputChange}
-                    className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 placeholder-gray-500'
-                    placeholder={t('contact.form.companyPlaceholder')}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className='block text-sm font-medium text-[#2d2e2e] mb-2'>
-                  {t('contact.form.projectType')}
-                </label>
-                <select
-                  name='projectType'
-                  value={formData.projectType}
-                  onChange={handleInputChange}
-                  aria-label={t('contact.form.projectType')}
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 text-gray-500'
+                <h3 className="text-2xl font-bold text-[#2d2e2e] mb-4">
+                  Message Sent Successfully!
+                </h3>
+                <p className="text-lg text-gray-600 mb-8 max-w-md">
+                  {submitStatus.message}
+                </p>
+                <button
+                  onClick={() => {
+                    setSubmitStatus({ type: null, message: '' });
+                    setFormData({
+                      name: '',
+                      email: '',
+                      phone: '',
+                      company: '',
+                      projectType: '',
+                      message: '',
+                    });
+                  }}
+                  className="px-6 py-3 bg-[#961d1f] text-white rounded-lg hover:bg-[#7a1619] transition-colors duration-200 font-medium"
                 >
-                  <option value='' disabled hidden>
-                    {t('contact.form.projectTypeOptions.select')}
-                  </option>
-                  <option value='residential'>
-                    {t('contact.form.projectTypeOptions.residential')}
-                  </option>
-                  <option value='commercial'>
-                    {t('contact.form.projectTypeOptions.commercial')}
-                  </option>
-                  <option value='mixed'>
-                    {t('contact.form.projectTypeOptions.mixed')}
-                  </option>
-                  <option value='renovation'>
-                    {t('contact.form.projectTypeOptions.renovation')}
-                  </option>
-                  <option value='other'>
-                    {t('contact.form.projectTypeOptions.other')}
-                  </option>
-                </select>
+                  Send Another Message
+                </button>
               </div>
+            ) : (
+              <>
+                <h2 className='text-2xl font-bold text-[#2d2e2e] mb-6'>
+                  {t('contact.form.title')}
+                </h2>
+                <form onSubmit={handleSubmit} className='space-y-6 flex-1 flex flex-col'>
+                  {/* Error Message */}
+                  {submitStatus.type === 'error' && (
+                    <div className="p-4 rounded-lg bg-red-100 border border-red-400 text-red-700">
+                      {submitStatus.message}
+                    </div>
+                  )}
 
-              <div>
-                <label className='block text-sm font-medium text-[#2d2e2e] mb-2'>
-                  {t('contact.form.message')} *
-                </label>
-                <textarea
-                  name='message'
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  required
-                  rows={5}
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 resize-vertical placeholder-gray-500'
-                  placeholder={t('contact.form.messagePlaceholder')}
-                />
-              </div>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                    <div>
+                      <label className='block text-sm font-medium text-[#2d2e2e] mb-2'>
+                        {t('contact.form.name')} <span className='text-red-500'>*</span>
+                      </label>
+                      <input
+                        type='text'
+                        name='name'
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                        className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 placeholder-gray-500 text-gray-900'
+                        placeholder={t('contact.form.namePlaceholder')}
+                      />
+                    </div>
+                    <div>
+                      <label className='block text-sm font-medium text-[#2d2e2e] mb-2'>
+                        {t('contact.form.email')} <span className='text-red-500'>*</span>
+                      </label>
+                      <input
+                        type='email'
+                        name='email'
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 placeholder-gray-500 text-gray-900'
+                        placeholder={t('contact.form.emailPlaceholder')}
+                      />
+                    </div>
+                  </div>
 
-              <button
-                type='submit'
-                className='w-full bg-[#961d1f] text-white font-semibold py-3 px-6 rounded-lg hover:bg-[#7a1619] transition-colors duration-200'
-              >
-                {t('contact.form.submit')}
-              </button>
-            </form>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                    <div>
+                      <label className='block text-sm font-medium text-[#2d2e2e] mb-2'>
+                        {t('contact.form.phone')}
+                      </label>
+                      <input
+                        type='tel'
+                        name='phone'
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 placeholder-gray-500 text-gray-900'
+                        placeholder={t('contact.form.phonePlaceholder')}
+                      />
+                    </div>
+                    <div>
+                      <label className='block text-sm font-medium text-[#2d2e2e] mb-2'>
+                        {t('contact.form.company')}
+                      </label>
+                      <input
+                        type='text'
+                        name='company'
+                        value={formData.company}
+                        onChange={handleInputChange}
+                        className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 placeholder-gray-500 text-gray-900'
+                        placeholder={t('contact.form.companyPlaceholder')}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className='block text-sm font-medium text-[#2d2e2e] mb-2'>
+                      {t('contact.form.projectType')}
+                    </label>
+                    <select
+                      name='projectType'
+                      value={formData.projectType}
+                      onChange={handleInputChange}
+                      aria-label={t('contact.form.projectType')}
+                      className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 text-gray-900'
+                    >
+                      <option value='' disabled hidden>
+                        {t('contact.form.projectTypeOptions.select')}
+                      </option>
+                      <option value='residential'>
+                        {t('contact.form.projectTypeOptions.residential')}
+                      </option>
+                      <option value='commercial'>
+                        {t('contact.form.projectTypeOptions.commercial')}
+                      </option>
+                      <option value='mixed'>
+                        {t('contact.form.projectTypeOptions.mixed')}
+                      </option>
+                      <option value='renovation'>
+                        {t('contact.form.projectTypeOptions.renovation')}
+                      </option>
+                      <option value='other'>
+                        {t('contact.form.projectTypeOptions.other')}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div className='flex-1'>
+                    <label className='block text-sm font-medium text-[#2d2e2e] mb-2'>
+                      {t('contact.form.message')} <span className='text-red-500'>*</span>
+                    </label>
+                    <textarea
+                      name='message'
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      required
+                      rows={5}
+                      className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#961d1f] transition-colors duration-200 resize-vertical placeholder-gray-500 text-gray-900'
+                      placeholder={t('contact.form.messagePlaceholder')}
+                    />
+                  </div>
+
+                  <div className="mt-auto">
+                    <button
+                      type='submit'
+                      disabled={isSubmitting}
+                      className={`w-full font-semibold py-3 px-6 rounded-lg transition-colors duration-200 ${
+                        isSubmitting
+                          ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+                          : 'bg-[#961d1f] text-white hover:bg-[#7a1619]'
+                      }`}
+                    >
+                      {isSubmitting ? 'Envoi en cours...' : t('contact.form.submit')}
+                    </button>
+                  </div>
+                </form>
+              </>
+            )}
           </div>
 
           {/* Contact Information */}
@@ -220,24 +315,40 @@ const Contact: React.FC = () => {
                     <h3 className='font-semibold text-[#2d2e2e] mb-1'>
                       {info.title}
                     </h3>
-                    <a
-                      href={info.href}
-                      className='text-[#961d1f] hover:text-[#7a1619] transition-colors duration-200'
-                    >
-                      {info.value}
-                    </a>
+                    {info.href ? (
+                      <a
+                        href={info.href}
+                        target={info.target}
+                        rel={info.rel}
+                        className='text-[#961d1f] hover:text-[#7a1619] transition-colors duration-200'
+                      >
+                        {info.value}
+                      </a>
+                    ) : (
+                      <span className='text-[#2d2e2e]'>{info.value}</span>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Map Placeholder */}
-            <div className='bg-gray-200 h-64 rounded-lg flex items-center justify-center mb-8'>
-              <div className='text-center text-gray-600'>
-                <HiOutlineMap className='text-5xl mb-3 mx-auto' />
-                <p className='font-medium'>{t('contact.map.title')}</p>
-                <p className='text-sm'>{t('contact.map.subtitle')}</p>
-              </div>
+            <div className='bg-gray-200 h-64 rounded-lg overflow-hidden mb-8'>
+              <a
+                href='https://www.google.com/maps?q=Montréal,+Québec,+Canada'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <iframe
+                  src='https://www.google.com/maps?q=Montréal,+Québec,+Canada&output=embed'
+                  width='100%'
+                  height='100%'
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading='lazy'
+                  referrerPolicy='no-referrer-when-downgrade'
+                ></iframe>
+              </a>
             </div>
           </div>
         </div>
