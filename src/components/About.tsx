@@ -11,7 +11,7 @@ const About: React.FC = () => {
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-start'>
           {/* Left side - Larger image only, no gradient, minimal left padding, highest z-index */}
           <div className='relative pl-1 z-50'>
-            <div className='relative w-full h-[650px] rounded-lg overflow-hidden z-50'>
+            <div className='relative w-full h-[650px] rounded-lg overflow-hidden z-50 px-2 sm:px-0'>
               <img
                 src={assets.images.about}
                 alt='MB Group - À propos de nous'
@@ -56,7 +56,7 @@ const About: React.FC = () => {
           </div>
 
           {/* Right side - Text content */}
-          <div className='relative lg:pl-4'>
+          <div className='relative px-4 sm:px-6 lg:pl-4'>
             <div className='space-y-8'>
               <h2 className='text-3xl md:text-4xl lg:text-5xl font-bold text-[#222222] leading-[normal] capitalize'>
                 À Propos MB Group

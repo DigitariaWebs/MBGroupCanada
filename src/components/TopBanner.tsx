@@ -11,9 +11,9 @@ const TopBanner: React.FC = () => {
 
   return (
     <div className='bg-black text-white py-2 px-4 text-center relative z-50'>
-      <div className='max-w-7xl mx-auto flex items-center justify-center'>
-        <div className='flex items-center gap-4'>
-          <span className='text-sm font-medium'>
+      <div className='max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4'>
+        <div className='flex flex-col md:flex-row items-center gap-2 md:gap-4'>
+          <span className='text-sm font-medium text-center md:text-left'>
             {t('contact.banner.message')}
           </span>
           <button
@@ -32,7 +32,7 @@ const TopBanner: React.FC = () => {
         {/* Bouton de fermeture */}
         <button
           onClick={() => setIsVisible(false)}
-          className='absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors duration-200 cursor-pointer'
+          className='absolute md:relative right-4 top-1/2 md:top-auto md:transform-none transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors duration-200 cursor-pointer'
           aria-label={t('contact.banner.close')}
         >
           <svg
