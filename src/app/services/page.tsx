@@ -29,24 +29,24 @@ const ServicesPage: React.FC = () => {
       {/* Main Content Container */}
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         {/* Hero Section */}
-        <div className='pt-16 pb-8'>
-          <div className='flex items-center justify-between'>
-            <div className='flex-1'>
-              <h1 className='text-[#010300] text-[68px] font-bold leading-[90px] mb-8'>
+        <div className='pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8'>
+          <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8'>
+            <div className='flex-1 w-full'>
+              <h1 className='text-[#010300] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[68px] font-bold leading-tight sm:leading-tight md:leading-tight lg:leading-[90px] mb-4 sm:mb-6 md:mb-8'>
                 NOS
                 <br />
                 SERVICES
               </h1>
-              <p className='text-[#000000] text-[14px] font-medium leading-[30px] max-w-[463px]'>
+              <p className='text-[#000000] text-sm sm:text-base md:text-[14px] font-medium leading-relaxed sm:leading-relaxed md:leading-[30px] max-w-full lg:max-w-[463px]'>
                 Chez MB Group, nous offrons une gamme complète de services
                 adaptés aux besoins variés de nos clients, qu&apos;ils soient
                 particuliers, investisseurs, institutions ou entreprises.
               </p>
             </div>
-            <div className='flex-none'>
-              <div className='flex items-center justify-center'>
-                <div className='rotate-90'>
-                  <div className='text-[#000000] text-[26px] font-semibold tracking-[1.3px]'>
+            <div className='hidden lg:block flex-none w-full lg:w-auto'>
+              <div className='flex items-center justify-center lg:justify-end'>
+                <div className='rotate-90 lg:rotate-90'>
+                  <div className='text-[#000000] text-lg sm:text-xl md:text-2xl lg:text-[26px] font-semibold tracking-[1.3px]'>
                     01 <span className='text-[#c9cece]'>/ 06</span>
                   </div>
                 </div>
