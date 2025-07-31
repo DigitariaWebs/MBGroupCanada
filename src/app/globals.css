@@ -22,10 +22,24 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-montserrat), system-ui, sans-serif;
+  overflow: relative;
+  z-index: 100 !important;
 }
 
 /* Prevent horizontal scroll on mobile */
 html,
 body {
-  overflow-x: hidden;
+  overflow-x: hidden
+}
+
+/* Prevent scrolling when menu is open */
+body.menu-open {
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Ensure navbar stays on top */
+nav[data-name="navbar-13"] {
+  position: relative;
+  z-index: 100 !important;
 }

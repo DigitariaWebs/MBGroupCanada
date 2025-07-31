@@ -1,12 +1,60 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from './LanguageProvider';
 import { HiOutlineChatBubbleLeftEllipsis } from 'react-icons/hi2';
 
 const Testimonials: React.FC = () => {
   const { t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isClient, setIsClient] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  // Set client-side flag
+  useEffect(() => {
+    setIsClient(true);
+    setWindowWidth(window.innerWidth);
+  }, []);
+
+  // Always show one indicator per testimonial
+  const getIndicatorCount = () => testimonials.length;
+
+  // The active indicator is always the currentIndex
+  const getActiveIndicatorIndex = () => currentIndex;
+
+  // Handle indicator click: scroll or set index
+  const handleIndicatorClick = (indicatorIdx: number) => {
+    setCurrentIndex(indicatorIdx);
+    if (isClient && windowWidth < 768 && carouselRef.current) {
+      const card = carouselRef.current.children[indicatorIdx] as HTMLElement;
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }
+  };
+
+  // Sync indicator with scroll on mobile
+  const handleScroll = () => {
+    if (isClient && windowWidth < 768 && carouselRef.current) {
+      const scrollLeft = carouselRef.current.scrollLeft;
+      const cardWidth = carouselRef.current.children[0]?.clientWidth || 1;
+      const idx = Math.round(scrollLeft / (cardWidth + 32)); // 32px gap-8
+      setCurrentIndex(idx);
+    }
+  };
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    if (isClient) {
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, [isClient]);
 
   const testimonials = [
     {
@@ -17,7 +65,7 @@ const Testimonials: React.FC = () => {
       name: 'Famille Tremblay',
       position: 'Acheteurs',
       image:
-        'https://images.unsplash.com/photo-1494790108755-2616b612b776?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=150&q=80',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=150&q=80',
     },
     {
       id: 2,
@@ -91,21 +139,21 @@ const Testimonials: React.FC = () => {
     },
   ];
 
-  // Auto-play functionality
+  // Infinite auto-play functionality
   useEffect(() => {
+    if (!isClient) return;
+    
     const interval = setInterval(() => {
       setCurrentIndex(prevIndex => (prevIndex + 1) % testimonials.length);
     }, 4000); // Change every 4 seconds
-
     return () => clearInterval(interval);
-  }, [testimonials.length]);
+  }, [testimonials.length, isClient]);
 
   // Calculate visible testimonials (show 3 at a time on desktop, 1 on mobile)
   const getVisibleTestimonials = () => {
-    if (typeof window === 'undefined') return testimonials.slice(0, 3);
+    if (!isClient) return testimonials.slice(0, 3);
 
-    const visibleCount =
-      window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1;
+    const visibleCount = windowWidth >= 1024 ? 3 : windowWidth >= 768 ? 2 : 1;
     const visible = [];
     for (let i = 0; i < visibleCount; i++) {
       const index = (currentIndex + i) % testimonials.length;
@@ -119,17 +167,29 @@ const Testimonials: React.FC = () => {
   );
 
   useEffect(() => {
+    if (!isClient) return;
+    
     const updateVisible = () => {
       setVisibleTestimonials(getVisibleTestimonials());
     };
 
     updateVisible();
+  }, [currentIndex, windowWidth, isClient]);
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('resize', updateVisible);
-      return () => window.removeEventListener('resize', updateVisible);
+  // Get carousel transform style
+  const getCarouselStyle = () => {
+    if (!isClient || windowWidth < 768) {
+      return { 
+        WebkitOverflowScrolling: 'touch' as const, 
+        msOverflowStyle: 'none' as const, 
+        scrollbarWidth: 'none' as const
+      };
     }
-  }, [currentIndex]);
+    
+    return {
+      transform: `translateX(-${currentIndex * (100 / (testimonials.length > 3 ? 3 : testimonials.length))}%)`,
+    };
+  };
 
   return (
     <section className='bg-gray-50 py-16 md:py-20 lg:py-24'>
@@ -147,20 +207,30 @@ const Testimonials: React.FC = () => {
 
         {/* Testimonials Carousel */}
         <div className='relative overflow-hidden'>
+          {/* Desktop/Tablet: Carousel with transform, Mobile: horizontal scroll with snap */}
           <div
-            className='flex transition-transform duration-1000 ease-in-out gap-8'
-            style={{
-              transform: `translateX(-${
-                typeof window !== 'undefined'
-                  ? (currentIndex * 100) / (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1)
-                  : 0
-              }%)`,
-            }}
+            ref={carouselRef}
+            className='
+              flex gap-8
+              transition-transform duration-1000 ease-in-out
+              md:overflow-visible md:snap-none
+              overflow-x-auto snap-x snap-mandatory
+              scrollbar-none
+              [&::-webkit-scrollbar]:hidden
+              [-ms-overflow-style:none]
+              [scrollbar-width:none]
+            '
+            style={getCarouselStyle()}
+            onScroll={handleScroll}
           >
             {testimonials.map(testimonial => (
               <div
                 key={testimonial.id}
-                className='flex-shrink-0 w-full md:w-1/2 lg:w-1/3'
+                className='
+                  flex-shrink-0 w-full md:w-1/2 lg:w-1/3
+                  snap-center md:snap-none
+                  px-1 md:px-0
+                '
               >
                 <div className='bg-white rounded-2xl p-8 shadow-lg border border-gray-100 h-full flex flex-col'>
                   {/* Quote Icon */}
@@ -202,10 +272,10 @@ const Testimonials: React.FC = () => {
 
         {/* Carousel Indicators */}
         <div className='flex justify-center gap-2 mt-12'>
-          {testimonials.map((_, index) => (
+          {Array.from({ length: testimonials.length }).map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentIndex(index)}
+              onClick={() => handleIndicatorClick(index)}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 index === currentIndex
                   ? 'bg-[#961d1f] w-8'

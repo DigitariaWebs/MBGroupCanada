@@ -14,11 +14,23 @@ const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
   const { t, currentLanguage, changeLanguage } = useLanguage();
 
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    const newState = !isMobileMenuOpen;
+    setIsMobileMenuOpen(newState);
+    
+    // Toggle body class
+    if (typeof document !== 'undefined') {
+      document.body.classList.toggle('menu-open', newState);
+    }
   };
+
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+    
+    // Remove body class
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('menu-open');
+    }
   };
 
   const handleLanguageChange = () => {
@@ -116,16 +128,16 @@ const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div
-          className='md:hidden fixed inset-0 bg-black bg-opacity-50 z-40 backdrop-blur-sm'
+          className='md:hidden fixed inset-0 bg-opacity-50 z-[999]'
           onClick={closeMobileMenu}
         ></div>
       )}
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed top-20 left-0 w-full bg-white/95 backdrop-blur-md shadow-xl z-50 transition-all duration-300 ${isMobileMenuOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}
+        className={`md:hidden fixed top-20 left-0 w-full bg-white backdrop-blur-md shadow-xl z-[1001] transition-all duration-300  ${isMobileMenuOpen ? 'translate-x-0 ' : '-translate-x-full'}`}
       >
-        <div className='flex flex-col py-4'>
+        <div className='flex flex-col py-4 '>
           <Link
             href='/'
             className='px-6 py-4 text-[#2d2e2e] font-semibold hover:bg-gray-50 hover:text-[#961d1f] transition-all duration-200 border-l-3 border-transparent hover:border-[#961d1f]'

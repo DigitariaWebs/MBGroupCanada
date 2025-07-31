@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from './LanguageProvider';
 import { assets } from '../config/assets';
 import {
@@ -9,9 +9,17 @@ import {
   FaTwitter,
   FaLinkedinIn,
 } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 const Footer: React.FC = () => {
   const { t } = useLanguage();
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [subscribeStatus, setSubscribeStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
 
   const currentYear = new Date().getFullYear();
 
@@ -43,6 +51,52 @@ const Footer: React.FC = () => {
     },
     { label: 'Adresse', value: 'Montréal, Québec, Canada', href: '#' },
   ];
+
+  const handleGetQuote = () => {
+    router.push('/#contact');
+  };
+
+  const handleNewsletterSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email) {
+      setSubscribeStatus({
+        type: 'error',
+        message: 'Veuillez entrer votre adresse email',
+      });
+      return;
+    }
+
+    setIsSubscribing(true);
+    setSubscribeStatus({ type: null, message: '' });
+
+    try {
+      // Here you would typically send the email to your backend
+      // For now, we'll simulate a successful subscription
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setSubscribeStatus({
+        type: 'success',
+        message: 'Merci! Vous êtes maintenant abonné à notre newsletter.',
+      });
+      setEmail('');
+    } catch (error) {
+      setSubscribeStatus({
+        type: 'error',
+        message: 'Une erreur est survenue. Veuillez réessayer.',
+      });
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    // Clear error state when user starts typing
+    if (subscribeStatus.type === 'error') {
+      setSubscribeStatus({ type: null, message: '' });
+    }
+  };
 
   return (
     <footer className='bg-[#1E1E1E] text-white'>
@@ -149,7 +203,10 @@ const Footer: React.FC = () => {
 
             {/* CTA Button */}
             <div className='mt-6'>
-              <button className='bg-[#961d1f] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#7a1619] transition-colors duration-200 w-full cursor-pointer'>
+              <button 
+                onClick={handleGetQuote}
+                className='bg-[#961d1f] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#7a1619] transition-colors duration-200 w-full cursor-pointer'
+              >
                 Obtenir un devis
               </button>
             </div>
@@ -157,30 +214,52 @@ const Footer: React.FC = () => {
         </div>
       </div>
 
-      {/* Newsletter Section */}
-      <div className='border-t border-gray-700'>
-        <div className='max-w-7xl mx-auto px-4 md:px-8 py-8'>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-8 items-center'>
-            <div>
-              <h3 className='text-xl font-bold mb-2'>Restez informé</h3>
-              <p className='text-gray-300'>
-                Recevez nos dernières actualités et projets immobiliers
-                directement dans votre boîte mail.
-              </p>
-            </div>
-            <div className='flex gap-3'>
-              <input
-                type='email'
-                placeholder='Votre adresse email'
-                className='flex-1 px-4 py-3 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-[#961d1f]'
-              />
-              <button className='bg-[#961d1f] text-white px-6 py-3 rounded-lg hover:bg-[#7a1619] transition-colors duration-200 font-medium'>
-                S'abonner
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+             {/* Newsletter Section */}
+       <div className='border-t border-gray-700'>
+         <div className='max-w-7xl mx-auto px-4 md:px-8 py-8'>
+           <div className='grid grid-cols-1 md:grid-cols-2 gap-8 items-center'>
+             <div>
+               <h3 className='text-xl font-bold mb-2'>Restez informé</h3>
+               <p className='text-gray-300'>
+                 Recevez nos dernières actualités et projets immobiliers
+                 directement dans votre boîte mail.
+               </p>
+             </div>
+             <div>
+               <form onSubmit={handleNewsletterSubscribe} className='flex flex-col sm:flex-row gap-3 w-full'>
+                 <input
+                   type='email'
+                   value={email}
+                   onChange={handleEmailChange}
+                   placeholder='Votre adresse email'
+                   className={`flex-1 px-4 py-3 rounded-lg bg-gray-800 border text-white placeholder-gray-400 focus:outline-none focus:border-[#961d1f] text-sm sm:text-base ${
+                     subscribeStatus.type === 'error' 
+                       ? 'border-red-500 text-red-400' 
+                       : 'border-gray-600'
+                   }`}
+                 />
+                 <button 
+                   type='submit'
+                   disabled={isSubscribing}
+                   className='bg-[#961d1f] text-white px-6 py-3 rounded-lg hover:bg-[#7a1619] transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base whitespace-nowrap'
+                 >
+                   {isSubscribing ? 'Abonnement...' : 'S\'abonner'}
+                 </button>
+               </form>
+               {/* Feedback message with defined space */}
+               <div className='h-6 mt-2'>
+                 {subscribeStatus.type && (
+                   <div className={`text-xs sm:text-sm ${
+                     subscribeStatus.type === 'success' ? 'text-green-400' : 'text-red-400'
+                   }`}>
+                     {subscribeStatus.message}
+                   </div>
+                 )}
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
 
       {/* Bottom Bar */}
       <div className='border-t border-gray-700'>
@@ -217,3 +296,4 @@ const Footer: React.FC = () => {
 };
 
 export default Footer;
+

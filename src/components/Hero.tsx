@@ -8,7 +8,7 @@ const Hero: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <section className='bg-white pt-4 md:pt-6 lg:pt-8 pb-16 md:pb-24 lg:pb-32'>
+    <section className='bg-white pt-4 md:pt-6 lg:pt-8 pb-16 md:pb-24 lg:pb-32 '>
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch min-h-[600px] lg:min-h-[700px]'>
         {/* Left side - Text content */}
         <div className='max-w-7xl mx-auto lg:mx-0 lg:ml-auto lg:mr-0 flex items-center'>
@@ -70,7 +70,7 @@ const Hero: React.FC = () => {
         </div>
 
         {/* Right side - Hero image */}
-        <div className='order-first lg:order-last flex items-center justify-end'>
+        <div className='order-first lg:order-last flex items-center justify-end relative z-0'>
           <div className='relative w-[90%] md:w-[85%] lg:w-full h-auto'>
             <img
               src={getAsset('images', 'hero')}
@@ -78,6 +78,7 @@ const Hero: React.FC = () => {
               height={1200}
               alt='MB Group - Construction et développement immobilier'
               className='w-full h-auto object-contain'
+              style={{ position: 'relative', zIndex: 0 }}
             />
           </div>
         </div>
